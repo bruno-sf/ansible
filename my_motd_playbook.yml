@@ -1,0 +1,33 @@
+---
+# My motd playbook based on OS ---
+-
+ 
+  
+  hosts: srv-linux
+  
+  vars:
+    org: "bsf"
+    motd_centos: "CentOS Linux - {{ org }}\n"
+    motd_ubuntu: "Ubuntu Linux - {{ org }}\n"
+ 
+  tasks:
+    - name: Configure a MOTD (message of the day)
+      copy:
+        content: "{{ motd_centos }}"
+        dest: /etc/motd
+      notify: MOTD changed
+      when: ansible_distribution == "CentOS"
+
+    - name: Configure a MOTD (message of the day)
+      copy:
+        content: "{{ motd_ubuntu }}"
+        dest: /etc/motd
+      notify: MOTD changed
+      when: ansible_distribution == "Ubuntu"
+      
+  handlers:
+    - name: MOTD changed
+      debug:
+        msg: The MOTD was changed
+ 
+...
